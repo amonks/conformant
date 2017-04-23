@@ -1,5 +1,6 @@
 {
   "name": "conformant",
+  "main": "conformant.js",
   "scripts": {
     "build": "rollup -c",
     "build:watch": "rollup -wc",
