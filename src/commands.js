@@ -120,7 +120,7 @@ const commands = {
 
     const c = v => check(specs, spec, v)
     if (R.is(Object, v)) {
-      return R.all(c, Object.values(v))
+      return R.all(c, R.values(v))
     }
     if (R.is(Array, v)) {
       return R.all(c, v)
