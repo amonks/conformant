@@ -117,3 +117,27 @@ arguments, return value, and their relationshp
 against the config provided in the spec, and
 throws if they aren't satisfied.
 
+
+
+## built-in specs
+
+the following specs are built in:
+
+### primitives
+
+- 'p/string'
+- 'p/number'
+- 'p/function'
+- 'p/array'
+- 'p/boolean'
+- 'p/object'
+- 'p/any'
+- 'p/true'
+- 'p/false'
+
+### conformant's types
+
+- 'conform/id'
+- 'conform/formal-spec'
+- 'conform/spec'
+
