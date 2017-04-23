@@ -13,12 +13,6 @@ import R from 'ramda'
  *
  * ['predicate', value => value === 'Bob Zucchini']
  * ['keys', 'staleness', 'crustiness', 'yeast']
- *
- * commands are passed an object with:
- *
- * ### args
- * ### check
- * ### specs
  */
 
 // a command is passed an object {
