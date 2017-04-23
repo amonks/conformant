@@ -66,17 +66,55 @@ rather than `check` and `conform`.
 
 ### or
 
+or takes at least two spec arguments, at least one of which a value must satisfy
+
 
 ### and
+
+and takes at least two spec arguments, at least one of which a value must satisfy
 
 
 ### keys
 
+keys takes at least one string argument, which must be the name of a spec in the
+'specs' object.
+
+An object satisfies a 'keys' spec if it has one key for each string argument, and
+if the values at those keys satisfy their specs.
+
+That was a pretty bad description, so here's an example:
+
+```javascript
+const specs = {
+  'person/name': 'p/string',
+  'person/age': 'p/number',
+  'person': ['keys', 'person/name', 'person/age']
+}
+const data = {
+  'person/name': 'Andrew',
+  'person/age': 24
+}
+const badData = {
+  'person/name': 55,
+  'person/age': 24
+}
+check(specs, 'person', data) // => true
+check(specs, 'person', badData) // => false
+```
+
 
 ### tuple
 
+the tuple command takes at least one spec argument.
+
+each argument is treated as a cell in the tuple.
+
 
 ### every
+
+every takes one spec argument.
+
+It validates that every value in a collection (object or array) satisfies that spec.
 
 
 
