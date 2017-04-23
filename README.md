@@ -35,12 +35,6 @@ Here are some examples of formal specs:
 ['predicate', value => value === 'Bob Zucchini']
 ['keys', 'staleness', 'crustiness', 'yeast']
 
-commands are passed an object with:
-
-### args
-### check
-### specs
-
 
 ### predicate
 
