@@ -7,7 +7,7 @@
     "test": "ava",
     "pretest": "run-p build",
     "test:watch": "ava --watch",
-    "prepublishOnly": "run-p generateDocs build",
+    "prepublishOnly": "run-p generate-docs",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "generate-docs": "node generateDocs.js"
   },
