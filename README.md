@@ -42,41 +42,41 @@ commands are passed an object with:
 ### specs
 
 
-* ### predicate
-*
-* Predicate takes one argument: a function.
-*
-* Here's an example predicate: `['predicate', v => v === true]`
+### predicate
+
+Predicate takes one argument: a function.
+
+Here's an example predicate: `['predicate', v => v === true]`
 
 
-* ### function
-*
-* A function spec takes one argument, a config object with
-* up to three keys:
-*
-* - args: a spec describing the arguments to the function
-* - ret: a spec describing the return value of the function
-* - fn: a predicate function passed ([...args], returnValue)
-*   describing the relationship between them
-*
-* None of those keys are checkable until apply-time, so function
-* specs are mostly useful with the provided `instrument` function,
-* rather than `check` and `conform`.
+### function
+
+A function spec takes one argument, a config object with
+up to three keys:
+
+- args: a spec describing the arguments to the function
+- ret: a spec describing the return value of the function
+- fn: a predicate function passed ([...args], returnValue)
+  describing the relationship between them
+
+None of those keys are checkable until apply-time, so function
+specs are mostly useful with the provided `instrument` function,
+rather than `check` and `conform`.
 
 
-* ### or
+### or
 
 
-* ### and
+### and
 
 
-* ### keys
+### keys
 
 
-* ### tuple
+### tuple
 
 
-* ### every
+### every
 
 
 
@@ -94,6 +94,7 @@ it returns true or false
 
 
 ## conformant.conform
+
 takes three arguments:
 - specs
 - spec
