@@ -1,5 +1,7 @@
 import R from 'ramda'
 
+import builtIns from './specs'
+
 /**
  * formalizeSpec
  * turn an informal spec into a formal spec
@@ -11,13 +13,17 @@ import R from 'ramda'
  * - a function (a predicate function)
  */
 
-const formalizeSpec = (spec) => {
+const formalizeSpec = R.curry((specs, spec) => {
+  if (!spec) throw Error('spec is required')
+
   if (R.is(Array, spec)) {
     return spec
   }
 
   if (R.is(String, spec)) {
-    return ['ref', spec]
+    const resolvedSpec = {...builtIns, ...specs}[spec]
+    if (!resolvedSpec) throw Error(`failed to resolve "${spec}"`)
+    return formalizeSpec(specs, resolvedSpec)
   }
 
   if (R.is(Function, spec)) {
@@ -25,7 +31,7 @@ const formalizeSpec = (spec) => {
   }
 
   throw Error(`unrecognized spec type (spec is ${R.tryCatch(JSON.stringify, R.identity)(spec)})`)
-}
+})
 
 export default formalizeSpec
 

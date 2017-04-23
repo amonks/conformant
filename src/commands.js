@@ -1,42 +1,74 @@
 import R from 'ramda'
 
-import resolveRef from './resolveRef'
-
 /**
  * ## commands
  *
- * Some commands are built into check. You may not define your own commands.
+ * All specs can be resolved to a command, and all other specs can be
+ * resolved to the 'predicate' command.
+ *
+ * A spec that uses a command is called a 'formal spec'. It is an array
+ * containing the command followed by its arguments.
+ *
+ * Here are some examples of formal specs:
+ *
+ * ['predicate', value => value === 'Bob Zucchini']
+ * ['keys', 'staleness', 'crustiness', 'yeast']
  *
  * commands are passed an object with:
- * - args
- * - check
- * - specs
+ *
+ * ### args
+ * ### check
+ * ### specs
  */
+
+// a command is passed an object {
+//   [...args],
+//   check,
+//   specs
+// }, and returns a predicate function of one argument
 
 const commands = {
   // basics
 
   /**
-   * - predicate
+   * ### predicate
+   *
+   * Predicate takes one argument: a function.
+   *
+   * Here's an example predicate: `['predicate', v => v === true]`
    */
-  predicate: ({args: [fn]}) => v => {
+
+  predicate: ({args: [fn, ...extraArgs]}) => v => {
+    if (extraArgs.length > 0) throw Error(`too many arguments for 'predicate' command`)
     if (!R.is(Function, fn)) throw Error(`predicate must be a function. Got ${fn}`)
     return fn(v)
   },
 
   /**
-   * - ref
+   * ### function
+   *
+   * A function spec takes one argument, a config object with
+   * up to three keys:
+   *
+   * - args: a spec describing the arguments to the function
+   * - ret: a spec describing the return value of the function
+   * - fn: a predicate function passed ([...args], returnValue)
+   *   describing the relationship between them
+   *
+   * None of those keys are checkable until apply-time, so function
+   * specs are mostly useful with the provided `instrument` function,
+   * rather than `check` and `conform`.
    */
-  ref: ({args: [ref], specs, check}) => v => {
-    const spec = resolveRef(specs, ref)
-    if (!spec) throw Error(`could not resolve reference "${ref}"`)
-    return check(specs, spec, v)
+  'function': ({args: [{args, ret, fn, ...extraConfig}, ...extraArgs]}) => v => {
+    if (extraConfig.length > 0) throw Error(`bad config keys for 'function' command: "${extraConfig}"`)
+    if (extraArgs.length > 0) throw Error(`too many arguments for 'function' command: "${extraArgs}"`)
+    return R.is(Function, v)
   },
 
   // logic
 
   /**
-   * - or
+   * ### or
    */
   or: ({args, specs, check}) => v => {
     if (args.length === 0) throw Error('no specs provided to "or"')
@@ -44,7 +76,7 @@ const commands = {
   },
 
   /**
-   * - and
+   * ### and
    */
   and: ({args, specs, check}) => v => {
     if (args.length === 0) throw Error('no specs provided to "and"')
@@ -54,16 +86,32 @@ const commands = {
   // maps
 
   /**
-   * - keys
+   * ### keys
    */
   keys: ({args: keys, specs, check}) => v => {
     if (keys.length === 0) throw Error('no keys provided to "keys"')
-    if (!R.is(Object, v)) throw Error(`value used with "keys" spec must be an object`)
+    if (!R.is(Object, v)) throw Error(`value used with "keys" spec must be an object. got ${v}`)
     return R.all(key => check(specs, key, v[key]), keys)
   },
 
+  // collections
+
   /**
-   * - every
+   * ### tuple
+   */
+  tuple: ({args, specs, check}) => (v) => {
+    if (args.length === 0) throw Error('bad spec: tuple length 0')
+    if (args.length !== v.length) return false
+
+    const results = args.map((spec, i) => {
+      return check(specs, spec, v[i])
+    })
+
+    return R.all(R.equals(true), results)
+  },
+
+  /**
+   * ### every
    */
   every: ({args, specs, check}) => v => {
     const [spec] = args
