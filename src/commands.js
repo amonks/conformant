@@ -69,17 +69,23 @@ const commands = {
 
   /**
    * ### or
+   *
+   * or takes at least two spec arguments, at least one of which a value must satisfy
    */
   or: ({args, specs, check}) => v => {
     if (args.length === 0) throw Error('no specs provided to "or"')
+    if (args.length === 1) throw Error('only one spec provided to "or"')
     return R.any(spec => check(specs, spec, v), args)
   },
 
   /**
    * ### and
+   *
+   * and takes at least two spec arguments, at least one of which a value must satisfy
    */
   and: ({args, specs, check}) => v => {
     if (args.length === 0) throw Error('no specs provided to "and"')
+    if (args.length === 1) throw Error('only one spec provided to "and"')
     return R.all(spec => check(specs, spec, v), args)
   },
 
@@ -87,6 +93,32 @@ const commands = {
 
   /**
    * ### keys
+   *
+   * keys takes at least one string argument, which must be the name of a spec in the
+   * 'specs' object.
+   *
+   * An object satisfies a 'keys' spec if it has one key for each string argument, and
+   * if the values at those keys satisfy their specs.
+   *
+   * That was a pretty bad description, so here's an example:
+   *
+   * ```javascript
+   * const specs = {
+   *   'person/name': 'p/string',
+   *   'person/age': 'p/number',
+   *   'person': ['keys', 'person/name', 'person/age']
+   * }
+   * const data = {
+   *   'person/name': 'Andrew',
+   *   'person/age': 24
+   * }
+   * const badData = {
+   *   'person/name': 55,
+   *   'person/age': 24
+   * }
+   * check(specs, 'person', data) // => true
+   * check(specs, 'person', badData) // => false
+   * ```
    */
   keys: ({args: keys, specs, check}) => v => {
     if (keys.length === 0) throw Error('no keys provided to "keys"')
@@ -98,6 +130,10 @@ const commands = {
 
   /**
    * ### tuple
+   *
+   * the tuple command takes at least one spec argument.
+   *
+   * each argument is treated as a cell in the tuple.
    */
   tuple: ({args, specs, check}) => (v) => {
     if (args.length === 0) throw Error('bad spec: tuple length 0')
@@ -112,6 +148,10 @@ const commands = {
 
   /**
    * ### every
+   *
+   * every takes one spec argument.
+   *
+   * It validates that every value in a collection (object or array) satisfies that spec.
    */
   every: ({args, specs, check}) => v => {
     const [spec] = args
