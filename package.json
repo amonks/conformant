@@ -5,6 +5,7 @@
     "build:watch": "rollup -wc",
     "dev": "run-p *:watch",
     "test": "ava",
+    "pretest": "run-p build",
     "test:watch": "ava --watch",
     "prepublishOnly": "run-p generateDocs build",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
