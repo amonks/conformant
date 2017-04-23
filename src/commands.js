@@ -11,8 +11,8 @@ import R from 'ramda'
  *
  * Here are some examples of formal specs:
  *
- * ['predicate', value => value === 'Bob Zucchini']
- * ['keys', 'staleness', 'crustiness', 'yeast']
+ * - `['predicate', value => value === 'Bob Zucchini']`
+ * - `['keys', 'staleness', 'crustiness', 'yeast']`
  */
 
 // a command is passed an object {

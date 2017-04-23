@@ -32,8 +32,8 @@ containing the command followed by its arguments.
 
 Here are some examples of formal specs:
 
-['predicate', value => value === 'Bob Zucchini']
-['keys', 'staleness', 'crustiness', 'yeast']
+- `['predicate', value => value === 'Bob Zucchini']`
+- `['keys', 'staleness', 'crustiness', 'yeast']`
 
 
 ### predicate
