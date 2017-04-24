@@ -1,5 +1,7 @@
 import R from 'ramda'
+
 import getPredicate from './predicate'
+import checkArgs from './checkArgs'
 
 /**
  * ## conformant.check
@@ -15,7 +17,8 @@ import getPredicate from './predicate'
  */
 
 const check = R.curry((specs, spec, value) => {
-  if (!spec) throw Error('spec is required')
+  const errors = checkArgs(specs, spec, value)
+  if (errors) throw Error(errors)
   const predicate = getPredicate(specs, spec)
   const result = predicate(value)
 

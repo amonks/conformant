@@ -41,14 +41,35 @@ specs['p/true'] = R.equals(true)
 specs['p/false'] = R.equals(false)
 
 // built-ins
+// these are implemented as predicates rather than using spec commands
+// for bootstrappy purposes. I'd be very interested in a way around that.
 
-specs['conform/id'] = ['and', ['p/string',
-                               str => str.includes('/')]]
-specs['conform/formal-spec'] = ['and', ['p/array',
-                                         v => R.contains(R.head(v), R.keys(commands))]]
-specs['conform/spec'] = ['or', ['conform/id',
-                                'p/function',
-                                'conform/formal-spec']]
+const or = (...predicates) => value => {
+  return !!R.find(R.equals(true), R.map(p => p(value), predicates))
+}
+
+const and = (...predicates) => value => {
+  return R.all(R.equals(true), R.map(p => p(value), predicates))
+}
+
+specs['conform/id'] = and(
+  R.is(String),
+  R.contains('/')
+)
+specs['conform/formal-spec'] = and(
+  R.is(Array),
+  v => R.contains(R.head(v), R.keys(commands))
+)
+specs['conform/spec'] = or(
+  specs['conform/id'],
+  R.is(Function),
+  specs['conform/formal-spec']
+)
+specs['conform/specs'] = and(
+  val => Object.values(val).every(specs['conform/spec']),
+  val => Object.keys(val).every(R.contains('/'))
+)
+specs['conform/value'] = R.always(true)
 
 export default specs
 
