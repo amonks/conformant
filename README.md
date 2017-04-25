@@ -33,7 +33,7 @@ containing the command followed by its arguments.
 Here are some examples of formal specs:
 
 - `['predicate', value => value === 'Bob Zucchini']`
-- `['keys', 'staleness', 'crustiness', 'yeast']`
+- `['keys', 'bread/staleness', 'bread/crustiness', 'bread/yeast']`
 
 
 ### predicate
@@ -82,7 +82,7 @@ That was a pretty bad description, so here's an example:
 const specs = {
   'person/name': 'p/string',
   'person/age': 'p/number',
-  'person': ['keys', 'person/name', 'person/age']
+  'person/person': ['keys', 'person/name', 'person/age']
 }
 const data = {
   'person/name': 'Andrew',
@@ -92,8 +92,8 @@ const badData = {
   'person/name': 55,
   'person/age': 24
 }
-check(specs, 'person', data) // => true
-check(specs, 'person', badData) // => false
+check(specs, 'person/person', data) // => true
+check(specs, 'person/person', badData) // => false
 ```
 
 
